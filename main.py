@@ -8,15 +8,6 @@ from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow, QGridLayout,
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 
-# COMMENT
-# COMMENT
-# COMMENT
-# COMMENT
-
-""" Encryption for passwords """
-# from cryptography.fernet import Fernet
-# key = b'UniversityOfTheFraserValley'
-
 
 # Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
@@ -90,9 +81,11 @@ class MainWindow(QMainWindow):
         title_font.setBold(True)
 
         lable_title = QLabel("University of the Fraser Valley", frame)
-        lable_title.setStyleSheet("background-color: black;"
+
+        lable_title.setStyleSheet("background-color: rgba(255,255,255,0.5);"
                                   "font: bold 25px;"
-                                  "color: white;")
+                                  "color: black;"
+                                  "")
 
         lable_title.setFont(title_font)
         lable_title.move(20, 20)
@@ -101,9 +94,10 @@ class MainWindow(QMainWindow):
         description_font.setPointSize(9)
 
         description_label = QLabel("Electric Vehicle Reservation", frame)
-        description_label.setStyleSheet("background-color: black;"
-                                        "color: white;"
-                                        "font: 15px;")
+        description_label.setStyleSheet("background-color: rgba(255,255,255,0.5);"
+                                        "color: black;"
+                                        "font: bold 15px;")
+
         description_label.setFont(description_font)
         description_label.move(50, 50)
 

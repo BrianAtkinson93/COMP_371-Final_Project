@@ -9,7 +9,7 @@
 ### Build
 
 > ```bash
-> ./dist/reservation.exe
+> pyinstaller -F --clean evp.spec -n evp.exe
 > ```
 
 ---
