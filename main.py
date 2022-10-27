@@ -21,41 +21,31 @@ class MainWindow(QMainWindow):
 
         self.connection = sqlite3.Connection("reservations.db")
         self.key = key
-        # self.cursor = self.connection.execute("SELECT * FROM parking_spot")
-        # print("{: >8} | {: >8} |".format(f'Stall:', f'Lot:'))
-        #
-        # for row in self.cursor:
-        #     print("{: >8} | {: >8} |".format(*row))
-        #
-        # self.cursor = self.connection.execute("SELECT * FROM students")
-        # print("-----------------------")
-        # print("{: >8} | {: >8} | {: >8} | {: >8} ".format(f'id:', f'name:', 'student_no', 'license_plate'))
-        #
-        # for row in self.cursor:
-        #     print("{: >8} | {: >8} | {: >8} | {: >8} ".format(*row))
 
         # Set the title for the window
         self.setWindowTitle("Login Page")
-        # self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint)
+        self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint)
 
         self.page_index = 0
 
         # Set the size of the window
         self.setFixedSize(400, 300)
 
-        self.frame_username = QFrame(self)
-        self.frame_full_name = QFrame(self)
+        self.frame_student_id = QFrame(self)
+        self.frame_license_plate = QFrame(self)
         # self.frame_email = QFrame(self)
-        self.cmbo_box_user_type = QComboBox(self)
 
-        self.label_username = QLabel("Student ID:", self)
+        self.cmbo_box_user_type = QComboBox(self)
+        self.label_student_id = QLabel("Student ID:", self)
         self.label_pswd = QLabel("Password", self)
-        self.edit_full_name = QLineEdit(self.frame_full_name)
+        self.edit_license_plate = QLineEdit(self.frame_license_plate)
+
         # self.edit_email = QLineEdit(self.frame_email)
         self.frame_pswd = QFrame(self)
-        self.line_edit_username = QLineEdit(self.frame_username)
-        self.lbl_full_name = QLabel("License Plate No:", self)
-        self.lbl_email = QLabel("Email", self)
+        self.line_edit_student_id = QLineEdit(self.frame_student_id)
+        self.lbl_license_plate = QLabel("License Plate No:", self)
+
+        # self.lbl_email = QLabel("Email", self)
         self.line_edit_pswd = QLineEdit(self.frame_pswd)
 
         self.btn_submit = QPushButton("Submit", self)
@@ -72,7 +62,7 @@ class MainWindow(QMainWindow):
     def app_header(self):
         palet = QPalette()
         # palet.setColor(QPalette.Background, QColor(10, 80, 30))
-        palet.setBrush(QPalette.Background, QBrush(QPixmap("ufv-abbotsford-campus-fraser-valley.jpg")))
+        palet.setBrush(QPalette.Background, QBrush(QPixmap("images/ufv-abbotsford-campus-fraser-valley.jpg")))
 
         # QFrame preserves a space of your size in the main window
         frame = QFrame(self)
@@ -87,7 +77,7 @@ class MainWindow(QMainWindow):
         label_icon = QLabel(frame)
         label_icon.setFixedWidth(60)
         label_icon.setFixedHeight(60)
-        label_icon.setPixmap(QPixmap("").scaled(40, 40, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        # label_icon.setPixmap(QPixmap("images/license_plate.png").scaled(40, 40, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         label_icon.move(37, 22)
 
         title_font = QFont()
@@ -138,7 +128,8 @@ class MainWindow(QMainWindow):
             sys.exit(os.EX_IOERR)
 
         elif None not in (id_, password_):
-            self.cursor = self.connection.execute(f"SELECT student_no, password FROM students WHERE student_no = {id_};")
+            self.cursor = self.connection.execute(
+                f"SELECT student_no, password FROM students WHERE student_no = {id_};")
             list = self.cursor.fetchall()
             if len(list) > 1:
                 print(f'Error with database, please contact your distributor', file=sys.stderr)
@@ -159,47 +150,29 @@ class MainWindow(QMainWindow):
         pass
 
     def registration_form(self):
-        # self.frame_email.show()
-        self.frame_full_name.show()
-        # self.lbl_email.show()
-        self.lbl_full_name.show()
+        self.frame_license_plate.show()
+        self.lbl_license_plate.show()
         self.setFixedSize(400, 440)
 
         # Full name --> frame and label
-        self.frame_full_name.setFrameShape(QFrame.StyledPanel)
-        self.frame_full_name.setFixedWidth(280)
-        self.frame_full_name.setFixedHeight(28)
-        self.lbl_full_name.move(60, 170)
-        self.frame_full_name.move(60, 196)
-        image_username = QLabel(self.frame_full_name)
-        image_username.setPixmap(QPixmap("username.png").scaled(20, 20, Qt.KeepAspectRatio,
-                                                                Qt.SmoothTransformation))
-        image_username.move(10, 4)
-        self.edit_full_name.setFrame(False)
-        self.edit_full_name.setTextMargins(8, 0, 4, 1)
-        self.edit_full_name.setFixedWidth(238)
-        self.edit_full_name.setFixedHeight(26)
-        self.edit_full_name.move(40, 1)
-
-        # Email --> frame and label
-        # self.frame_email.setFrameShape(QFrame.StyledPanel)
-        # self.frame_email.setFixedWidth(280)
-        # self.frame_email.setFixedHeight(28)
-        # self.lbl_email.move(60, 224)
-        # self.frame_email.move(60, 250)
-        # image_email = QLabel(self.frame_email)
-        # image_email.setPixmap(QPixmap("email.png").scaled(20, 20, Qt.KeepAspectRatio,
-        #                                                   Qt.SmoothTransformation))
-        # image_email.move(10, 4)
-        # self.edit_email.setFrame(False)
-        # self.edit_email.setTextMargins(8, 0, 4, 1)
-        # self.edit_email.setFixedWidth(238)
-        # self.edit_email.setFixedHeight(26)
-        # self.edit_email.move(40, 1)
+        self.frame_license_plate.setFrameShape(QFrame.StyledPanel)
+        self.frame_license_plate.setFixedWidth(280)
+        self.frame_license_plate.setFixedHeight(28)
+        self.lbl_license_plate.move(60, 170)
+        self.frame_license_plate.move(60, 196)
+        image_license_plate = QLabel(self.frame_license_plate)
+        image_license_plate.setPixmap(QPixmap("images/license_plate.png").scaled(20, 20, Qt.KeepAspectRatio,
+                                                                                 Qt.SmoothTransformation))
+        image_license_plate.move(10, 4)
+        self.edit_license_plate.setFrame(False)
+        self.edit_license_plate.setTextMargins(8, 0, 4, 1)
+        self.edit_license_plate.setFixedWidth(238)
+        self.edit_license_plate.setFixedHeight(26)
+        self.edit_license_plate.move(40, 1)
 
         # Move login form
-        self.label_username.move(60, 225)
-        self.frame_username.move(60, 250)
+        self.label_student_id.move(60, 225)
+        self.frame_student_id.move(60, 250)
 
         self.label_pswd.move(60, 275)
         self.frame_pswd.move(60, 300)
@@ -238,26 +211,26 @@ class MainWindow(QMainWindow):
 
     def login_form(self):
         # self.frame_email.hide()
-        self.frame_full_name.hide()
-        self.lbl_email.hide()
-        self.lbl_full_name.hide()
+        self.frame_license_plate.hide()
+        # self.lbl_email.hide()
+        self.lbl_license_plate.hide()
         self.setFixedSize(400, 380)
-        self.label_username.move(60, 170)
+        self.label_student_id.move(60, 170)
 
-        self.frame_username.setFrameShape(QFrame.StyledPanel)
-        self.frame_username.setFixedWidth(280)
-        self.frame_username.setFixedHeight(28)
-        self.frame_username.move(60, 196)
+        self.frame_student_id.setFrameShape(QFrame.StyledPanel)
+        self.frame_student_id.setFixedWidth(280)
+        self.frame_student_id.setFixedHeight(28)
+        self.frame_student_id.move(60, 196)
         #
-        image_username = QLabel(self.frame_username)
-        image_username.setPixmap(QPixmap("username.png").scaled(20, 20, Qt.KeepAspectRatio,
-                                                                Qt.SmoothTransformation))
+        image_username = QLabel(self.frame_student_id)
+        image_username.setPixmap(QPixmap("images/username.png").scaled(20, 20, Qt.KeepAspectRatio,
+                                                                       Qt.SmoothTransformation))
         image_username.move(10, 4)
-        self.line_edit_username.setFrame(False)
-        self.line_edit_username.setTextMargins(8, 0, 4, 1)
-        self.line_edit_username.setFixedWidth(238)
-        self.line_edit_username.setFixedHeight(26)
-        self.line_edit_username.move(40, 1)
+        self.line_edit_student_id.setFrame(False)
+        self.line_edit_student_id.setTextMargins(8, 0, 4, 1)
+        self.line_edit_student_id.setFixedWidth(238)
+        self.line_edit_student_id.setFixedHeight(26)
+        self.line_edit_student_id.move(40, 1)
         self.label_pswd.move(60, 224)
 
         self.frame_pswd.setFrameShape(QFrame.StyledPanel)
@@ -266,8 +239,8 @@ class MainWindow(QMainWindow):
         self.frame_pswd.move(60, 250)
 
         img_pswd = QLabel(self.frame_pswd)
-        img_pswd.setPixmap(QPixmap("password.png").scaled(20, 20, Qt.KeepAspectRatio,
-                                                          Qt.SmoothTransformation))
+        img_pswd.setPixmap(QPixmap("images/password.png").scaled(20, 20, Qt.KeepAspectRatio,
+                                                                 Qt.SmoothTransformation))
         img_pswd.move(10, 4)
 
         self.line_edit_pswd.setEchoMode(QLineEdit.Password)
@@ -285,7 +258,7 @@ class MainWindow(QMainWindow):
         self.btn_cancel.move(205, 286)
 
     def get_login_details(self):
-        username = str(self.line_edit_username.text())
+        username = str(self.line_edit_student_id.text())
         password = str(self.line_edit_pswd.text())
         return [username, password]
 
@@ -294,9 +267,9 @@ class MainWindow(QMainWindow):
 
     def get_register_details(self):
         email = str(self.edit_email.text())
-        full_name = str(self.edit_full_name.text())
+        full_name = str(self.edit_license_plate.text())
         password = str(self.line_edit_pswd.text())
-        username = str(self.line_edit_username.text())
+        username = str(self.line_edit_student_id.text())
         return [username, password, email, full_name]
 
     def display_msg(self, title: str, msg: str):
