@@ -37,13 +37,13 @@ class MainWindow(QMainWindow):
 
         self.cmbo_box_user_type = QComboBox(self)
         self.label_student_id = QLabel("Student ID:", self)
-        self.label_pswd = QLabel("Password", self)
+        self.label_pswd = QLabel("Password:", self)
         self.edit_license_plate = QLineEdit(self.frame_license_plate)
 
         # self.edit_email = QLineEdit(self.frame_email)
         self.frame_pswd = QFrame(self)
         self.line_edit_student_id = QLineEdit(self.frame_student_id)
-        self.lbl_license_plate = QLabel("License Plate No:", self)
+        self.lbl_license_plate = QLabel("License Plate:", self)
 
         # self.lbl_email = QLabel("Email", self)
         self.line_edit_pswd = QLineEdit(self.frame_pswd)
@@ -62,7 +62,7 @@ class MainWindow(QMainWindow):
     def app_header(self):
         palet = QPalette()
         # palet.setColor(QPalette.Background, QColor(10, 80, 30))
-        palet.setBrush(QPalette.Background, QBrush(QPixmap("images/ufv-abbotsford-campus-fraser-valley.jpg")))
+        palet.setBrush(QPalette.Background, QBrush(QPixmap("images/ufv-abbotsford-campus-fraser-valley.jpg").scaled(300, 300, Qt.KeepAspectRatio, Qt.SmoothTransformation)))
 
         # QFrame preserves a space of your size in the main window
         frame = QFrame(self)
@@ -74,11 +74,11 @@ class MainWindow(QMainWindow):
         frame.setFixedHeight(84)
         frame.move(0, 0)
         #
-        label_icon = QLabel(frame)
-        label_icon.setFixedWidth(60)
-        label_icon.setFixedHeight(60)
-        # label_icon.setPixmap(QPixmap("images/license_plate.png").scaled(40, 40, Qt.KeepAspectRatio, Qt.SmoothTransformation))
-        label_icon.move(37, 22)
+        # label_icon = QLabel(frame)
+        # label_icon.setFixedWidth(60)
+        # label_icon.setFixedHeight(60)
+        # label_icon.setPixmap(QPixmap("images/ufv.png").scaled(40, 40, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        # label_icon.move(37, 22)
 
         title_font = QFont()
         title_font.setPointSize(16)
@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
         self.btn_submit.clicked.connect(self.check_submission)
 
     def login_as_user(self, id_=None, password_=None):
-
+        check_pwd = None
         if id_ is None:
             print('Please provide a valid student id', file=sys.stderr)
             sys.exit(os.EX_IOERR)
@@ -154,14 +154,14 @@ class MainWindow(QMainWindow):
         self.lbl_license_plate.show()
         self.setFixedSize(400, 440)
 
-        # Full name --> frame and label
+        # License Plate --> frame and label
         self.frame_license_plate.setFrameShape(QFrame.StyledPanel)
         self.frame_license_plate.setFixedWidth(280)
         self.frame_license_plate.setFixedHeight(28)
-        self.lbl_license_plate.move(60, 170)
-        self.frame_license_plate.move(60, 196)
+        self.lbl_license_plate.move(60, 175)
+        self.frame_license_plate.move(60, 200)
         image_license_plate = QLabel(self.frame_license_plate)
-        image_license_plate.setPixmap(QPixmap("images/license_plate.png").scaled(20, 20, Qt.KeepAspectRatio,
+        image_license_plate.setPixmap(QPixmap("images/license_plate.png").scaled(100, 100, Qt.KeepAspectRatio,
                                                                                  Qt.SmoothTransformation))
         image_license_plate.move(10, 4)
         self.edit_license_plate.setFrame(False)
@@ -266,11 +266,11 @@ class MainWindow(QMainWindow):
         return str(self.cmbo_box_user_type.currentText())
 
     def get_register_details(self):
-        email = str(self.edit_email.text())
+        # email = str(self.edit_email.text())
         full_name = str(self.edit_license_plate.text())
         password = str(self.line_edit_pswd.text())
         username = str(self.line_edit_student_id.text())
-        return [username, password, email, full_name]
+        return [username, password, full_name]
 
     def display_msg(self, title: str, msg: str):
         QMessageBox.about(self, title, msg)
