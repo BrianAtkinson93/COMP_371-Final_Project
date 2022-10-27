@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 # from cryptography.fernet import Fernet
 # key = b'UniversityOfTheFraserValley'
 
+
 # Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
 
@@ -24,8 +25,6 @@ class MainWindow(QMainWindow):
 
         for row in self.cursor:
             print("{: >8} | {: >8} |".format(*row))
-
-        print(f'fjdkfjdslflkdflkdjsf')
 
         # Set the title for the window
         self.setWindowTitle("Login Page")
