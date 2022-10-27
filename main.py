@@ -2,29 +2,43 @@ import os
 import sys
 import sqlite3
 
+# Module Imports
 from PyQt5.QtGui import QFont, QPalette, QColor, QPixmap, QBrush
 from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow, QGridLayout, QWidget, QVBoxLayout, QHBoxLayout, \
     QStackedLayout, QMenuBar, QMenu, QFrame, QComboBox, QLineEdit
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 
+# Local Imports
+from stubs.encryption import *
+
 
 # Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
 
-    def __init__(self):
+    def __init__(self, key):
         super().__init__()
 
         self.connection = sqlite3.Connection("reservations.db")
-        self.cursor = self.connection.execute("SELECT * FROM parking_spot")
-        print("{: >8} | {: >8} |".format(f'Stall:', f'Lot:'))
-
-        for row in self.cursor:
-            print("{: >8} | {: >8} |".format(*row))
+        self.key = key
+        # self.cursor = self.connection.execute("SELECT * FROM parking_spot")
+        # print("{: >8} | {: >8} |".format(f'Stall:', f'Lot:'))
+        #
+        # for row in self.cursor:
+        #     print("{: >8} | {: >8} |".format(*row))
+        #
+        # self.cursor = self.connection.execute("SELECT * FROM students")
+        # print("-----------------------")
+        # print("{: >8} | {: >8} | {: >8} | {: >8} ".format(f'id:', f'name:', 'student_no', 'license_plate'))
+        #
+        # for row in self.cursor:
+        #     print("{: >8} | {: >8} | {: >8} | {: >8} ".format(*row))
 
         # Set the title for the window
         self.setWindowTitle("Login Page")
         # self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint)
+
+        self.page_index = 0
 
         # Set the size of the window
         self.setFixedSize(400, 300)
@@ -45,7 +59,7 @@ class MainWindow(QMainWindow):
         self.line_edit_pswd = QLineEdit(self.frame_pswd)
 
         self.btn_submit = QPushButton("Submit", self)
-        # self.btn_submit.clicked.connect(self.check_submission)
+        self.btn_submit.clicked.connect(self.check_submission)
         self.btn_cancel = QPushButton("Cancel", self)
         self.btn_cancel.clicked.connect(self.close)
         self.line_edit_pswd.setFrame(False)
@@ -73,7 +87,7 @@ class MainWindow(QMainWindow):
         label_icon = QLabel(frame)
         label_icon.setFixedWidth(60)
         label_icon.setFixedHeight(60)
-        label_icon.setPixmap(QPixmap("").scaled(40, 40, Qt.KeepAspectRatio,Qt.SmoothTransformation))
+        label_icon.setPixmap(QPixmap("").scaled(40, 40, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         label_icon.move(37, 22)
 
         title_font = QFont()
@@ -112,10 +126,34 @@ class MainWindow(QMainWindow):
         self.cmbo_box_user_type.setFixedHeight(26)
         self.cmbo_box_user_type.move(60, 136)
         self.cmbo_box_user_type.currentIndexChanged.connect(self.on_combobox_togl)
-        # self.btn_submit.clicked.connect(self.check_submission)
+        self.btn_submit.clicked.connect(self.check_submission)
 
-    def login_as_user(self):
-        pass
+    def login_as_user(self, id_=None, password_=None):
+
+        if id_ is None:
+            print('Please provide a valid student id', file=sys.stderr)
+            sys.exit(os.EX_IOERR)
+        elif password_ is None:
+            print('Please provide a valid password', file=sys.stderr)
+            sys.exit(os.EX_IOERR)
+
+        elif None not in (id_, password_):
+            self.cursor = self.connection.execute(f"SELECT student_no, password FROM students WHERE student_no = {id_};")
+            list = self.cursor.fetchall()
+            if len(list) > 1:
+                print(f'Error with database, please contact your distributor', file=sys.stderr)
+                sys.exit(os.EX_DATAERR)
+            else:
+                for entry in list:
+                    check_uname = entry[0]
+                    check_pwd = entry[1]
+
+        boolean = self.validate_credentials(password_, check_pwd)
+
+        if boolean:
+            pass
+
+        return
 
     def register_user(self):
         pass
@@ -168,14 +206,34 @@ class MainWindow(QMainWindow):
 
         self.btn_submit.move(60, 350)
         self.btn_cancel.move(205, 350)
-        # self.btn_submit.clicked.connect(self.check_submission)
+        self.btn_submit.clicked.connect(self.check_submission)
+
+    def check_submission(self):
+        # page 0 == login
+        if self.page_index == 0:
+            usr, pwd = self.get_login_details()
+            self.login_as_user(usr, pwd)
+
+        # page 1 == register
+        elif self.page_index == 1:
+            pass
+
+        # page 3 == reservation
+        elif self.page_index == 2:
+            pass
+
+        # handle a failure
+        else:
+            pass
 
     def on_combobox_togl(self, index):
         if index == 1:
-            print("Registration")
+            # print("Registration")
+            self.page_index = 1
             self.registration_form()
         else:
-            print("Login")
+            # print("Login")
+            self.page_index = 0
             self.login_form()
 
     def login_form(self):
@@ -244,12 +302,30 @@ class MainWindow(QMainWindow):
     def display_msg(self, title: str, msg: str):
         QMessageBox.about(self, title, msg)
 
+    def validate_credentials(self, g_pwd, check_against_pwd):
+
+        decrypted = decrypt(self.key, check_against_pwd)
+        given_pwd = bytes(g_pwd, "utf-8")
+
+        print(f'decrypted: {decrypted}, {type(decrypted)}')
+        print(f'given_pwd: {given_pwd}, {type(given_pwd)}')
+
+        if not given_pwd == decrypted:
+            print('Failed Login Attempt', file=sys.stderr)
+            sys.exit(os.EX_DATAERR)
+
+        else:
+            print(f'Credentials Validated...')
+
+        return True
+
 
 if __name__ == "__main__":
+    key = base64.urlsafe_b64encode(bytes('UniversityOfTheFraserValley2022=', encoding="utf-8"))
 
     app = QApplication(sys.argv)
 
-    mainwindow = MainWindow()
+    mainwindow = MainWindow(key)
     mainwindow.show()
 
     sys.exit(app.exec_())
