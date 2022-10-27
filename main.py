@@ -8,6 +8,11 @@ from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow, QGridLayout,
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 
+# COMMENT
+# COMMENT
+# COMMENT
+# COMMENT
+
 """ Encryption for passwords """
 # from cryptography.fernet import Fernet
 # key = b'UniversityOfTheFraserValley'
