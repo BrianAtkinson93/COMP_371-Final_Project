@@ -62,7 +62,9 @@ class MainWindow(QMainWindow):
     def app_header(self):
         palet = QPalette()
         # palet.setColor(QPalette.Background, QColor(10, 80, 30))
-        palet.setBrush(QPalette.Background, QBrush(QPixmap("images/ufv-abbotsford-campus-fraser-valley.jpg").scaled(300, 300, Qt.KeepAspectRatio, Qt.SmoothTransformation)))
+        palet.setBrush(QPalette.Background, QBrush(
+            QPixmap("images/ufv-abbotsford-campus-fraser-valley.jpg").scaled(300, 300, Qt.KeepAspectRatio,
+                                                                             Qt.SmoothTransformation)))
 
         # QFrame preserves a space of your size in the main window
         frame = QFrame(self)
@@ -146,8 +148,39 @@ class MainWindow(QMainWindow):
 
         return
 
-    def register_user(self):
-        pass
+    def register_as_user(self, *args):
+        print(f'{"Student ID" :<10} | {"Password" :<10} | {"License Plate: " :<10}')
+        print(f'{args[0] :<10} | {args[1] :<10} | {args[2] :<10}')
+        if args[0] is None:
+            print(f'Please provide a valid Student ID:', file=sys.stderr)
+            sys.exit(os.EX_IOERR)
+
+        elif args[1] is None:
+            print(f'Please provide a valid Password:', file=sys.stderr)
+            sys.exit(os.EX_IOERR)
+
+        elif args[2] is None:
+            print(f'Please provide a valid License Plate:', file=sys.stderr)
+            sys.exit(os.EX_IOERR)
+
+        elif None not in (args[0], args[1], args[2]):
+            self.cursor = self.connection.execute(
+                f"SELECT student_no, password, license_plate FROM students WHERE student_no = {args[0]};")
+            fetchall = self.cursor.fetchall()
+            if len(fetchall) < 1:
+                print(f'Data error please contact distributor', file=sys.stderr)
+            else:
+                for row in fetchall:
+                    if row[2] is None:
+                        print(f'IMPLEMENT!!!!!!', file=sys.stderr)
+                        self.cursor = self.connection.execute(f"UPDATE students"
+                                                              f"SET ")
+                        pass
+
+                    elif row[2] is not None:
+                        print(f'User is already registered...', file=sys.stderr)
+                        print(f'User: {args[0] :<10}', file=sys.stderr)
+                        print(f'License Plate: {args[2] :<10}', file=sys.stderr)
 
     def registration_form(self):
         self.frame_license_plate.show()
@@ -184,12 +217,13 @@ class MainWindow(QMainWindow):
     def check_submission(self):
         # page 0 == login
         if self.page_index == 0:
-            usr, pwd = self.get_login_details()
-            self.login_as_user(usr, pwd)
+            sid, pwd = self.get_login_details()
+            self.login_as_user(sid, pwd)
 
         # page 1 == register
         elif self.page_index == 1:
-            pass
+            sid, pwd, lp = self.get_register_details()
+            self.register_as_user(sid, pwd, lp)
 
         # page 3 == reservation
         elif self.page_index == 2:
@@ -265,12 +299,11 @@ class MainWindow(QMainWindow):
     def check_user_type(self):
         return str(self.cmbo_box_user_type.currentText())
 
-    def get_register_details(self):
-        # email = str(self.edit_email.text())
-        full_name = str(self.edit_license_plate.text())
-        password = str(self.line_edit_pswd.text())
-        username = str(self.line_edit_student_id.text())
-        return [username, password, full_name]
+    def get_register_details(self) -> list[str, str, str]:
+        license_plate = str(self.edit_license_plate.text())
+        password_ = str(self.line_edit_pswd.text())
+        student_id = str(self.line_edit_student_id.text())
+        return [student_id, password_, license_plate]
 
     def display_msg(self, title: str, msg: str):
         QMessageBox.about(self, title, msg)
