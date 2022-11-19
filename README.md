@@ -20,7 +20,7 @@ pyinstaller --clean evp.exe.spec
 This program currently does not require any cmd line arguments, environment_variables or other relative input. Simply execute the binary and follow the linear progression.
 The binary after pyinstaller creation, will be located in the /dist/ directory.
 ``` bash
-./dist/
+./dist/evp.exe
 ```
 
 
@@ -32,6 +32,5 @@ The binary after pyinstaller creation, will be located in the /dist/ directory.
 
 ### Credits:
 
-Project Lead: Frank Zhang
-Development Lead: Brian Atkinson
-Co-Developers: Joti Sidhu, Sean Heppner
+Project Lead: Frank Zhang<br>
+Development Lead: Brian Atkinson <br>
