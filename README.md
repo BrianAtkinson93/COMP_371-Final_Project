@@ -10,20 +10,19 @@ This system is intended to allow students and staff members to reserve time bloc
 ---
 
 ### Build
-
-> ```bash
-> pyinstaller -F --clean evp.exe.spec
-> ```
-
----
-
-### Install
-This program currently does not require any cmd line arguments. Simply execute the binary and follow the linear progression.
-
+``` bash
+pyinstaller --clean evp.exe.spec
+```
 
 ---
 
-### Run
+### Install / Run
+This program currently does not require any cmd line arguments, environment_variables or other relative input. Simply execute the binary and follow the linear progression.
+The binary after pyinstaller creation, will be located in the /dist/ directory.
+``` bash
+./dist/
+```
+
 
 ---
 

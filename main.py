@@ -1,16 +1,20 @@
-import os
-import sys
 import sqlite3
 
 # Module Imports
-from PyQt5.QtGui import QFont, QPalette, QColor, QPixmap, QBrush
-from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow, QGridLayout, QWidget, QVBoxLayout, QHBoxLayout, \
-    QStackedLayout, QMenuBar, QMenu, QFrame, QComboBox, QLineEdit
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QFont, QPalette, QPixmap, QBrush
+from PyQt5.QtWidgets import QMessageBox, QFrame, QComboBox, QLineEdit
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 
 # Local Imports
 from stubs.encryption import *
+
+
+def get_path(relative_path):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, relative_path)
+    else:
+        return os.path.join(os.path.abspath("."), relative_path)
 
 
 # Subclass QMainWindow to customize your application's main window
@@ -63,8 +67,8 @@ class MainWindow(QMainWindow):
         palet = QPalette()
         # palet.setColor(QPalette.Background, QColor(10, 80, 30))
         palet.setBrush(QPalette.Background, QBrush(
-            QPixmap("images/ufv-abbotsford-campus-fraser-valley.jpg").scaled(300, 300, Qt.KeepAspectRatio,
-                                                                             Qt.SmoothTransformation)))
+            QPixmap(get_path("images/ufv-abbotsford-campus-fraser-valley.jpg")).scaled(300, 300, Qt.KeepAspectRatio,
+                                                                                       Qt.SmoothTransformation)))
 
         # QFrame preserves a space of your size in the main window
         frame = QFrame(self)
@@ -75,6 +79,7 @@ class MainWindow(QMainWindow):
         frame.setFixedWidth(400)
         frame.setFixedHeight(84)
         frame.move(0, 0)
+
         #
         # label_icon = QLabel(frame)
         # label_icon.setFixedWidth(60)
@@ -132,6 +137,7 @@ class MainWindow(QMainWindow):
         elif None not in (id_, password_):
             self.cursor = self.connection.execute(
                 f"SELECT student_no, password FROM students WHERE student_no = {id_};")
+            print(self.cursor)
             list = self.cursor.fetchall()
             if len(list) > 1:
                 print(f'Error with database, please contact your distributor', file=sys.stderr)
@@ -166,6 +172,7 @@ class MainWindow(QMainWindow):
         elif None not in (args[0], args[1], args[2]):
             self.cursor = self.connection.execute(
                 f"SELECT student_no, password, license_plate FROM students WHERE student_no = {args[0]};")
+
             fetchall = self.cursor.fetchall()
             if len(fetchall) < 1:
                 print(f'Data error please contact distributor', file=sys.stderr)
@@ -194,8 +201,8 @@ class MainWindow(QMainWindow):
         self.lbl_license_plate.move(60, 175)
         self.frame_license_plate.move(60, 200)
         image_license_plate = QLabel(self.frame_license_plate)
-        image_license_plate.setPixmap(QPixmap("images/license_plate.png").scaled(100, 100, Qt.KeepAspectRatio,
-                                                                                 Qt.SmoothTransformation))
+        image_license_plate.setPixmap(QPixmap(get_path("images/license_plate.png")).scaled(100, 100, Qt.KeepAspectRatio,
+                                                                                           Qt.SmoothTransformation))
         image_license_plate.move(10, 4)
         self.edit_license_plate.setFrame(False)
         self.edit_license_plate.setTextMargins(8, 0, 4, 1)
@@ -257,7 +264,7 @@ class MainWindow(QMainWindow):
         self.frame_student_id.move(60, 196)
         #
         image_username = QLabel(self.frame_student_id)
-        image_username.setPixmap(QPixmap("images/username.png").scaled(20, 20, Qt.KeepAspectRatio,
+        image_username.setPixmap(QPixmap(get_path("images/username.png")).scaled(20, 20, Qt.KeepAspectRatio,
                                                                        Qt.SmoothTransformation))
         image_username.move(10, 4)
         self.line_edit_student_id.setFrame(False)
@@ -273,8 +280,8 @@ class MainWindow(QMainWindow):
         self.frame_pswd.move(60, 250)
 
         img_pswd = QLabel(self.frame_pswd)
-        img_pswd.setPixmap(QPixmap("images/password.png").scaled(20, 20, Qt.KeepAspectRatio,
-                                                                 Qt.SmoothTransformation))
+        img_pswd.setPixmap(QPixmap(get_path("images/password.png")).scaled(20, 20, Qt.KeepAspectRatio,
+                                                        Qt.SmoothTransformation))
         img_pswd.move(10, 4)
 
         self.line_edit_pswd.setEchoMode(QLineEdit.Password)
@@ -324,6 +331,16 @@ class MainWindow(QMainWindow):
             print(f'Credentials Validated...')
 
         return True
+
+    def resource_path(self, relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+
+        return os.path.join(base_path, relative_path)
 
 
 if __name__ == "__main__":
