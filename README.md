@@ -28,7 +28,7 @@ The binary after pyinstaller creation, will be located in the /dist/ directory.
 ``` bash
 ./dist/evp.exe
 ```
-T
+
 ---
 
 
