@@ -13,6 +13,12 @@ This system is intended to allow students and staff members to reserve time bloc
 ``` bash
 pyinstaller --clean evp.exe.spec
 ```
+The .spec file I have provided should already contain all the information you need in order to build this binary as it should run. 
+<br> If you should run into any issues here is the long command.
+
+``` bash
+pyinstaller --noconfirm --onefile --windowed --clean -n evp.exe main.py --add-data "images;images" --add-data "README.md;." --add-data "reservations.db;."
+```
 
 ---
 
@@ -22,7 +28,7 @@ The binary after pyinstaller creation, will be located in the /dist/ directory.
 ``` bash
 ./dist/evp.exe
 ```
-
+T
 ---
 
 

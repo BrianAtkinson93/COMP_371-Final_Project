@@ -8,7 +8,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('images', 'images'), ('README.md', '.'), ('reservations.db', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -21,18 +21,13 @@ a = Analysis(
 )
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
-campus_pic = ('images/ufv-abbotsford-campus-fraser-valley.jpg', './images/ufv-abbotsford-campus-fraser-valley.jpg', 'DATA')
-password_pic = ('images/password.png', './images/password.png', 'DATA')
-license_plate_pic = ('images/license_plate.png', './images/license_plate.png', 'DATA')
-username_pic = ('images/username.png', './images/username.png', 'DATA')
-
 exe = EXE(
     pyz,
     a.scripts,
     a.binaries,
     a.zipfiles,
     a.datas,
-    [campus_pic, password_pic, license_plate_pic, username_pic],
+    [],
     name='evp.exe',
     debug=False,
     bootloader_ignore_signals=False,
@@ -46,4 +41,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['C:\\Users\\brian\\Desktop\\School\\COMP_371_Frank_Zhang\\EV_Reservation\\images\\license_plate.png'],
 )
