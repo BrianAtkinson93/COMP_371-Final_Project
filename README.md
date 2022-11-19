@@ -17,7 +17,7 @@ The .spec file I have provided should already contain all the information you ne
 <br> If you should run into any issues here is the long command.
 
 ``` bash
-pyinstaller --noconfirm --onefile --windowed --clean -n evp.exe main.py --add-data "images;images" --add-data "README.md;." --add-data "reservations.db;."
+pyinstaller --noconfirm --onefile --windowed --clean -n evp.exe main.py --add-data "images;images" --add-data "README.md;." --add-data "reservations.db;." --icon "images/ufv.png"
 ```
 
 ---
