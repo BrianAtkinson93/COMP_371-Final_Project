@@ -232,10 +232,13 @@ class MainWindow(QMainWindow):
             sid, pwd, lp = self.get_register_details()
             self.register_as_user(sid, pwd, lp)
 
+        # TODO
+        # This section can be added by anyone!!!!!!
         # page 3 == reservation
         elif self.page_index == 2:
             pass
-
+        # TODO
+        # This section can be added by anyone!!!!!!
         # handle a failure
         else:
             pass
